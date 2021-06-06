@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>What is a Functor? &mdash; Functors, Applicatives, and Monads  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What is an Applicative?" href="applicatives.html" />
+    <link rel="prev" title="What is a Category?" href="categories.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Functors, Applicatives, and Monads
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Why another Monad Tutorial?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="haskell.html">What is Haskell?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">What is a Category?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is a Functor?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rudimentary-definition">Rudimentary Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constant-functor">Constant Functor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="applicatives.html">What is an Applicative?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">What is a Monad?</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Functors, Applicatives, and Monads</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>What is a Functor?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/src/functors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="what-is-a-functor">
+<h1>What is a Functor?<a class="headerlink" href="#what-is-a-functor" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="rudimentary-definition">
+<h2>Rudimentary Definition<a class="headerlink" href="#rudimentary-definition" title="Permalink to this headline">¶</a></h2>
+<p>A functor is a (nice) mapping between categories that preserves arrows and compositions.
+Specifically, if we have two categories <span class="math notranslate nohighlight">\(C,D\)</span>, a functor <span class="math notranslate nohighlight">\(F\)</span> is a mapping between each category such that for <span class="math notranslate nohighlight">\(f:a\to b\)</span>, there exists <span class="math notranslate nohighlight">\(Ff:Fa\to Fb\)</span>.
+Another way to think of a functor is an “image” of the category <span class="math notranslate nohighlight">\(C\)</span> <em>inside</em> the category <span class="math notranslate nohighlight">\(D\)</span>.</p>
+</div>
+<div class="section" id="constant-functor">
+<h2>Constant Functor<a class="headerlink" href="#constant-functor" title="Permalink to this headline">¶</a></h2>
+<p>Nothing in the previous section prohibits one from defining a functor <span class="math notranslate nohighlight">\(F:C\to D\)</span> to map every object to the exact same object <span class="math notranslate nohighlight">\(d\in D\)</span>.
+This is called a constant functor and despite appearing not useful, comes up in quite a few places.
+There is a functor that does this for <em>every object</em> in <span class="math notranslate nohighlight">\(D\)</span>.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Let’s say we want to store user information so we use a record type (think object in javascript or dictionary in python)</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span> <span class="kt">UserInfo</span> <span class="ow">=</span> <span class="kt">UserInfo</span> <span class="p">{</span>
+   <span class="n">name</span> <span class="ow">::</span> <span class="kt">String</span>
+   <span class="p">,</span> <span class="n">age</span> <span class="ow">::</span> <span class="kt">Int</span>
+   <span class="p">}</span>
+   <span class="kr">deriving</span> <span class="kt">Show</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="o">$</span> <span class="kt">UserInfo</span> <span class="p">{</span> <span class="n">name</span> <span class="ow">=</span> <span class="s">&quot;Zachary Dodge&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="ow">=</span> <span class="mi">99</span> <span class="p">}</span>
+<span class="c1">-- -&gt; UserInfo {name = &quot;Zachary Dodge&quot;, age = 99}</span>
+</pre></div>
+</div>
+<p>Suppose we use this record in our code but later find out the user’s age may not always be supplied.
+Let’s create a new data type to encode this possibility:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">data</span> <span class="kt">Nullable</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">Present</span> <span class="n">a</span>
+                <span class="o">|</span> <span class="kt">Null</span>
+<span class="kr">data</span> <span class="kt">UserInfo</span> <span class="ow">=</span> <span class="kt">UserInfo</span> <span class="p">{</span>
+   <span class="n">name</span> <span class="ow">::</span> <span class="kt">String</span>
+   <span class="p">,</span> <span class="n">age</span> <span class="ow">::</span> <span class="kt">Nullable</span> <span class="kt">Int</span>
+   <span class="p">}</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="o">$</span> <span class="kt">UserInfo</span> <span class="p">{</span> <span class="n">name</span> <span class="ow">=</span> <span class="s">&quot;Zachary Dodge&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="ow">=</span> <span class="kt">Null</span> <span class="p">}</span>
+<span class="c1">-- -&gt; UserInfo {name = &quot;Zachary Dodge&quot;, age = Null}</span>
+</pre></div>
+</div>
+<p>Great, but now anytime we want to use this age (or in general, this Nullable data type), we need to check if it is null before proceeding.
+Here is slightly contrived example of this difficulty:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- putStrLn :: String -&gt; IO ()</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+   <span class="kr">let</span> <span class="n">info</span> <span class="ow">=</span> <span class="kt">UserInfo</span> <span class="p">{</span> <span class="n">name</span> <span class="ow">=</span> <span class="s">&quot;Zachary Dodge&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="ow">=</span> <span class="kt">Present</span> <span class="mi">99</span> <span class="p">}</span>
+   <span class="kr">let</span> <span class="n">can_drink</span> <span class="ow">=</span> <span class="kr">case</span> <span class="n">age</span> <span class="n">info</span> <span class="kr">of</span>
+         <span class="kt">Present</span> <span class="n">age</span> <span class="ow">-&gt;</span> <span class="kt">Present</span> <span class="p">(</span><span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">21</span><span class="p">)</span>
+         <span class="kr">_</span> <span class="ow">-&gt;</span> <span class="kt">Null</span>
+   <span class="kr">case</span> <span class="n">can_drink</span> <span class="kr">of</span>
+      <span class="kt">Present</span> <span class="kt">True</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;Here is your free beer&quot;</span>
+      <span class="kt">Present</span> <span class="kt">False</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;You are not old enough to drink&quot;</span>
+      <span class="kr">_</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;I don&#39;t know how old you are&quot;</span>
+</pre></div>
+</div>
+<p>Looking at this code, we notice: <code class="docutils literal notranslate"><span class="pre">can_drink</span></code> has type <code class="docutils literal notranslate"><span class="pre">Nullable</span> <span class="pre">Boolean</span></code> and the first case expression is essentially just <code class="docutils literal notranslate"><span class="pre">age</span> <span class="pre">&gt;=</span> <span class="pre">21</span></code> but changed to work with the <code class="docutils literal notranslate"><span class="pre">Nullable</span></code> type.
+Is there a way we could remove the “boiler-plate” code to keep this code clearer?</p>
+<p>The answer to this question is <strong>yes</strong>, we can make <code class="docutils literal notranslate"><span class="pre">Nullable</span></code> a <em>Functor</em> which will allow us to skip this case expression and therefore write cleaner code.
+Here is a (simplified) definition of a functor in Haskell.</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">class</span> <span class="kt">Functor</span> <span class="n">f</span> <span class="kr">where</span>
+   <span class="n">fmap</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>In the case of <code class="docutils literal notranslate"><span class="pre">Nullable</span></code>, we want to say how an arbitrary function <span class="math notranslate nohighlight">\(f:a\to b\)</span> can be <em>lifted</em> (transformed) to work with a Nullable input and output.
+This amounts to the following:</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">instance</span> <span class="kt">Functor</span> <span class="p">(</span><span class="kt">Nullable</span> <span class="n">a</span><span class="p">)</span> <span class="kr">where</span>
+   <span class="c1">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span>
+   <span class="n">fmap</span> <span class="kr">_</span> <span class="kt">Null</span> <span class="ow">=</span> <span class="kt">Null</span>
+   <span class="n">fmap</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Present</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">Present</span> <span class="o">$</span> <span class="n">f</span> <span class="n">a</span>
+
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+   <span class="kr">let</span> <span class="n">info</span> <span class="ow">=</span> <span class="kt">UserInfo</span> <span class="p">{</span> <span class="n">name</span> <span class="ow">=</span> <span class="s">&quot;Zachary Dodge&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="ow">=</span> <span class="kt">Present</span> <span class="mi">21</span> <span class="p">}</span>
+   <span class="kr">let</span> <span class="n">can_drink</span> <span class="ow">=</span> <span class="n">fmap</span> <span class="p">(</span><span class="nf">\</span><span class="n">age</span> <span class="ow">-&gt;</span> <span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">21</span><span class="p">)</span> <span class="p">(</span><span class="n">age</span> <span class="n">info</span><span class="p">)</span>
+   <span class="kr">case</span> <span class="n">can_drink</span> <span class="kr">of</span>
+      <span class="kt">Present</span> <span class="kt">True</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;Here is your free beer&quot;</span>
+      <span class="kt">Present</span> <span class="kt">False</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;You are not old enough to drink&quot;</span>
+      <span class="kr">_</span> <span class="ow">-&gt;</span> <span class="n">putStrLn</span> <span class="s">&quot;I don&#39;t know how old you are&quot;</span>
+</pre></div>
+</div>
+<p>It turns out there are other data types that are functors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">List</span> <span class="pre">a</span></code> (or <code class="docutils literal notranslate"><span class="pre">[a]</span></code>) where <code class="docutils literal notranslate"><span class="pre">fmap</span> <span class="pre">::</span> <span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">List</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">List</span> <span class="pre">b</span></code> is defined by <code class="docutils literal notranslate"><span class="pre">fmap</span> <span class="pre">_</span> <span class="pre">[]</span> <span class="pre">=</span> <span class="pre">[]</span></code> and <code class="docutils literal notranslate"><span class="pre">fmap</span> <span class="pre">f</span> <span class="pre">(x:xs)</span> <span class="pre">=</span> <span class="pre">f</span> <span class="pre">x</span> <span class="pre">:</span> <span class="pre">(fmap</span> <span class="pre">f</span> <span class="pre">xs)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Identity</span> <span class="pre">a</span></code> where <code class="docutils literal notranslate"><span class="pre">fmap</span> <span class="pre">::</span> <span class="pre">(a</span> <span class="pre">-&gt;</span> <span class="pre">b)</span> <span class="pre">-&gt;</span> <span class="pre">Identity</span> <span class="pre">a</span> <span class="pre">-&gt;</span> <span class="pre">Identity</span> <span class="pre">b</span></code> is defined by <code class="docutils literal notranslate"><span class="pre">fmap</span> <span class="pre">f</span> <span class="pre">(Identity</span> <span class="pre">a)</span> <span class="pre">=</span> <span class="pre">Identity</span> <span class="pre">$</span> <span class="pre">f</span> <span class="pre">a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IO</span> <span class="pre">a</span></code> the data type that represents input output (real-world programming)</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="applicatives.html" class="btn btn-neutral float-right" title="What is an Applicative?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="categories.html" class="btn btn-neutral float-left" title="What is a Category?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Zachary Dodge.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

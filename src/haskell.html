@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>What is Haskell? &mdash; Functors, Applicatives, and Monads  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What is a Category?" href="categories.html" />
+    <link rel="prev" title="Why another Monad Tutorial?" href="tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Functors, Applicatives, and Monads
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Why another Monad Tutorial?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is Haskell?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">What is a Category?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functors.html">What is a Functor?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="applicatives.html">What is an Applicative?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monads.html">What is a Monad?</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Functors, Applicatives, and Monads</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>What is Haskell?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/src/haskell.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="what-is-haskell">
+<h1>What is Haskell?<a class="headerlink" href="#what-is-haskell" title="Permalink to this headline">¶</a></h1>
+<p>People often put Haskell down saying “it’s only an academic language” or “what is a monad”.
+They often experience confusion or distaste when they see Haskell code.</p>
+<p>Let’s briefly look at common scripting tasks we may wish to use and we will see how terse Haskell can be.</p>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Comments are preceded by two hyphens</span>
+<span class="c1">-- Say Hello</span>
+<span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span> <span class="c1">-- This type definition says &#39;main&#39; does IO and returns nothing (&#39;()&#39; is unit)</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="n">putStrLn</span> <span class="s">&quot;Hello, World!&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Relevant type definitions:</span>
+<span class="c1">-- readFile :: FilePath -&gt; IO String</span>
+<span class="c1">-- putStrLn :: String -&gt; IO ()</span>
+<span class="c1">-- For now don&#39;t worry that the output of readFile doesn&#39;t match the input of putStrLn</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+   <span class="n">contents</span> <span class="ow">&lt;-</span> <span class="n">readFile</span> <span class="s">&quot;test.txt&quot;</span>
+   <span class="n">putStrLn</span> <span class="n">contents</span>
+</pre></div>
+</div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nn">Data.List.Utils</span> <span class="p">(</span><span class="nf">replace</span><span class="p">)</span>
+
+<span class="c1">-- Replace replaces occurrences of the first argument with the second argument in the last argument</span>
+<span class="c1">-- replace :: String -&gt; String -&gt; String -&gt; String</span>
+<span class="c1">-- writeFile :: FilePath -&gt; String -&gt; IO ()</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+   <span class="n">contents</span> <span class="ow">&lt;-</span> <span class="n">readFile</span> <span class="s">&quot;test.txt&quot;</span>
+   <span class="n">writeFile</span> <span class="s">&quot;test.txt&quot;</span> <span class="o">$</span> <span class="n">replace</span> <span class="s">&quot;OldWord&quot;</span> <span class="s">&quot;NewWord&quot;</span> <span class="n">contents</span>
+   <span class="c1">-- &#39;$&#39; is shorthand syntax to force precedence of the right expression (evaluates first)</span>
+</pre></div>
+</div>
+<div class="highlight-haskell notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create a new algebraic data type (A list in this case)</span>
+<span class="c1">-- Made up of pairing a value of type &#39;a&#39; with a list of type &#39;NList a&#39; (imagine single linked list)</span>
+<span class="kr">data</span> <span class="kt">NList</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">NCons</span> <span class="n">a</span> <span class="p">(</span><span class="kt">NList</span> <span class="n">a</span><span class="p">)</span>
+            <span class="o">|</span> <span class="kt">NNil</span>
+            <span class="kr">deriving</span> <span class="kt">Show</span>
+
+<span class="c1">-- We &quot;derived&quot; (got for free) the typeclass Show so we can print this new type</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="o">$</span> <span class="kt">NCons</span> <span class="s">&quot;Hello&quot;</span> <span class="p">(</span><span class="kt">NCons</span> <span class="s">&quot;there&quot;</span> <span class="kt">NNil</span><span class="p">)</span>
+<span class="c1">-- -&gt; NCons &quot;Hello&quot; (NCons &quot;there&quot; NNil)</span>
+
+<span class="c1">-- Here is a conversion routine to normal lists:</span>
+<span class="nf">convertNListList</span> <span class="ow">::</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">NList</span> <span class="n">a</span>
+<span class="nf">convertNListList</span> <span class="kt">NNil</span> <span class="ow">=</span> <span class="kt">[]</span>
+<span class="nf">convertNListList</span> <span class="p">(</span><span class="kt">NCons</span> <span class="n">x</span> <span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="n">x</span> <span class="kt">:</span> <span class="n">convertNListList</span> <span class="n">xs</span>
+
+<span class="c1">-- Here is the counterpart conversion</span>
+<span class="nf">convertListNList</span> <span class="ow">::</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">NList</span> <span class="n">a</span>
+<span class="nf">convertListNList</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">NNil</span>
+<span class="nf">convertListNList</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="kt">NCons</span> <span class="n">x</span> <span class="p">(</span><span class="n">convertListNList</span> <span class="n">xs</span><span class="p">)</span>
+
+<span class="c1">-- We can make a &quot;better&quot; instance of Show</span>
+<span class="kr">instance</span> <span class="kt">Show</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="kt">Show</span> <span class="p">(</span><span class="kt">NList</span> <span class="n">a</span><span class="p">)</span> <span class="kr">where</span>
+   <span class="n">show</span> <span class="n">list</span> <span class="ow">=</span> <span class="n">show</span><span class="o">.</span><span class="n">convertNListList</span> <span class="n">list</span>
+<span class="nf">main2</span> <span class="ow">=</span> <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="o">$</span> <span class="kt">NCons</span> <span class="s">&quot;Hello&quot;</span> <span class="p">(</span><span class="kt">NCons</span> <span class="s">&quot;there&quot;</span> <span class="kt">NNil</span><span class="p">)</span>
+<span class="c1">-- -&gt; [&quot;Hello&quot;, &quot;there&quot;]</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="categories.html" class="btn btn-neutral float-right" title="What is a Category?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="Why another Monad Tutorial?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Zachary Dodge.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
